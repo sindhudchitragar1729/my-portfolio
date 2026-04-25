@@ -8,3 +8,104 @@
 export interface HealthStatus {
   status: string;
 }
+
+export interface CreateContactMessage {
+  /**
+   * @minLength 1
+   * @maxLength 100
+   */
+  name: string;
+  /** @maxLength 200 */
+  email: string;
+  /** @maxLength 200 */
+  subject?: string;
+  /**
+   * @minLength 1
+   * @maxLength 5000
+   */
+  message: string;
+}
+
+export interface ContactMessage {
+  id: number;
+  name: string;
+  email: string;
+  subject?: string | null;
+  message: string;
+  createdAt: string;
+}
+
+export type ProjectStatus = (typeof ProjectStatus)[keyof typeof ProjectStatus];
+
+export const ProjectStatus = {
+  shipped: "shipped",
+  beta: "beta",
+  archived: "archived",
+  in_progress: "in_progress",
+} as const;
+
+export interface Project {
+  id: number;
+  title: string;
+  tagline: string;
+  description: string;
+  tech: string[];
+  role: string;
+  year: number;
+  status: ProjectStatus;
+  repoUrl?: string | null;
+  liveUrl?: string | null;
+  accentColor: string;
+  featured: boolean;
+}
+
+export interface Skill {
+  name: string;
+  /**
+   * @minimum 0
+   * @maximum 100
+   */
+  level: number;
+}
+
+export interface SkillGroup {
+  category: string;
+  skills: Skill[];
+}
+
+export type ExperienceEntryKind =
+  (typeof ExperienceEntryKind)[keyof typeof ExperienceEntryKind];
+
+export const ExperienceEntryKind = {
+  education: "education",
+  work: "work",
+} as const;
+
+export interface ExperienceEntry {
+  id: number;
+  kind: ExperienceEntryKind;
+  title: string;
+  organization: string;
+  location: string;
+  startDate: string;
+  endDate?: string | null;
+  description: string;
+  highlights: string[];
+}
+
+export interface CurrentlyWorking {
+  headline: string;
+  summary: string;
+  focusAreas: string[];
+  learning: string[];
+  availability: string;
+  lastUpdated: string;
+}
+
+export interface PortfolioStats {
+  yearsCoding: number;
+  projectsShipped: number;
+  technologiesUsed: number;
+  coffeesConsumed: number;
+  commitsThisYear: number;
+}

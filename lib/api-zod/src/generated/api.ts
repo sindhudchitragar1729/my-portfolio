@@ -14,3 +14,116 @@ import * as zod from "zod";
 export const HealthCheckResponse = zod.object({
   status: zod.string(),
 });
+
+/**
+ * Visitors can send a message via the portfolio contact form.
+ * @summary Submit a contact message
+ */
+export const createContactMessageBodyNameMax = 100;
+
+export const createContactMessageBodyEmailMax = 200;
+
+export const createContactMessageBodySubjectMax = 200;
+
+export const createContactMessageBodyMessageMax = 5000;
+
+export const CreateContactMessageBody = zod.object({
+  name: zod.string().min(1).max(createContactMessageBodyNameMax),
+  email: zod.string().email().max(createContactMessageBodyEmailMax),
+  subject: zod.string().max(createContactMessageBodySubjectMax).optional(),
+  message: zod.string().min(1).max(createContactMessageBodyMessageMax),
+});
+
+/**
+ * Returns all contact messages, newest first.
+ * @summary List all contact messages
+ */
+export const ListContactMessagesResponseItem = zod.object({
+  id: zod.number(),
+  name: zod.string(),
+  email: zod.string(),
+  subject: zod.string().nullish(),
+  message: zod.string(),
+  createdAt: zod.coerce.date(),
+});
+export const ListContactMessagesResponse = zod.array(
+  ListContactMessagesResponseItem,
+);
+
+/**
+ * @summary List portfolio projects
+ */
+export const ListProjectsResponseItem = zod.object({
+  id: zod.number(),
+  title: zod.string(),
+  tagline: zod.string(),
+  description: zod.string(),
+  tech: zod.array(zod.string()),
+  role: zod.string(),
+  year: zod.number(),
+  status: zod.enum(["shipped", "beta", "archived", "in_progress"]),
+  repoUrl: zod.string().nullish(),
+  liveUrl: zod.string().nullish(),
+  accentColor: zod.string(),
+  featured: zod.boolean(),
+});
+export const ListProjectsResponse = zod.array(ListProjectsResponseItem);
+
+/**
+ * @summary List skills grouped by category
+ */
+export const listSkillsResponseSkillsItemLevelMin = 0;
+export const listSkillsResponseSkillsItemLevelMax = 100;
+
+export const ListSkillsResponseItem = zod.object({
+  category: zod.string(),
+  skills: zod.array(
+    zod.object({
+      name: zod.string(),
+      level: zod
+        .number()
+        .min(listSkillsResponseSkillsItemLevelMin)
+        .max(listSkillsResponseSkillsItemLevelMax),
+    }),
+  ),
+});
+export const ListSkillsResponse = zod.array(ListSkillsResponseItem);
+
+/**
+ * @summary List education and work experience
+ */
+export const ListExperienceResponseItem = zod.object({
+  id: zod.number(),
+  kind: zod.enum(["education", "work"]),
+  title: zod.string(),
+  organization: zod.string(),
+  location: zod.string(),
+  startDate: zod.string(),
+  endDate: zod.string().nullish(),
+  description: zod.string(),
+  highlights: zod.array(zod.string()),
+});
+export const ListExperienceResponse = zod.array(ListExperienceResponseItem);
+
+/**
+ * @summary What I'm currently working on
+ */
+export const GetCurrentlyWorkingResponse = zod.object({
+  headline: zod.string(),
+  summary: zod.string(),
+  focusAreas: zod.array(zod.string()),
+  learning: zod.array(zod.string()),
+  availability: zod.string(),
+  lastUpdated: zod.coerce.date(),
+});
+
+/**
+ * @summary Aggregate portfolio stats
+ */
+export const GetStatsResponse = zod.object({
+  yearsCoding: zod.number(),
+  projectsShipped: zod.number(),
+  technologiesUsed: zod.number(),
+  coffeesConsumed: zod.number(),
+  commitsThisYear: zod.number(),
+});

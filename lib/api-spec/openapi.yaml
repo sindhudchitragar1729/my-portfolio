@@ -10,6 +10,10 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: contact
+    description: Contact messages
+  - name: portfolio
+    description: Portfolio data (projects, skills, experience)
 paths:
   /healthz:
     get:
@@ -24,6 +28,105 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /contact:
+    post:
+      operationId: createContactMessage
+      tags: [contact]
+      summary: Submit a contact message
+      description: Visitors can send a message via the portfolio contact form.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateContactMessage"
+      responses:
+        "201":
+          description: Message stored successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContactMessage"
+    get:
+      operationId: listContactMessages
+      tags: [contact]
+      summary: List all contact messages
+      description: Returns all contact messages, newest first.
+      responses:
+        "200":
+          description: List of contact messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ContactMessage"
+  /portfolio/projects:
+    get:
+      operationId: listProjects
+      tags: [portfolio]
+      summary: List portfolio projects
+      responses:
+        "200":
+          description: List of projects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Project"
+  /portfolio/skills:
+    get:
+      operationId: listSkills
+      tags: [portfolio]
+      summary: List skills grouped by category
+      responses:
+        "200":
+          description: List of skill groups
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SkillGroup"
+  /portfolio/experience:
+    get:
+      operationId: listExperience
+      tags: [portfolio]
+      summary: List education and work experience
+      responses:
+        "200":
+          description: List of experience entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ExperienceEntry"
+  /portfolio/now:
+    get:
+      operationId: getCurrentlyWorking
+      tags: [portfolio]
+      summary: What I'm currently working on
+      responses:
+        "200":
+          description: Currently working summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CurrentlyWorking"
+  /portfolio/stats:
+    get:
+      operationId: getStats
+      tags: [portfolio]
+      summary: Aggregate portfolio stats
+      responses:
+        "200":
+          description: Portfolio aggregate stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PortfolioStats"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +136,195 @@ components:
           type: string
       required:
         - status
-
+    CreateContactMessage:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        email:
+          type: string
+          format: email
+          maxLength: 200
+        subject:
+          type: string
+          maxLength: 200
+        message:
+          type: string
+          minLength: 1
+          maxLength: 5000
+      required:
+        - name
+        - email
+        - message
+    ContactMessage:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        subject:
+          type: string
+          nullable: true
+        message:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - email
+        - message
+        - createdAt
+    Project:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        tagline:
+          type: string
+        description:
+          type: string
+        tech:
+          type: array
+          items:
+            type: string
+        role:
+          type: string
+        year:
+          type: integer
+        status:
+          type: string
+          enum: [shipped, beta, archived, in_progress]
+        repoUrl:
+          type: string
+          nullable: true
+        liveUrl:
+          type: string
+          nullable: true
+        accentColor:
+          type: string
+        featured:
+          type: boolean
+      required:
+        - id
+        - title
+        - tagline
+        - description
+        - tech
+        - role
+        - year
+        - status
+        - accentColor
+        - featured
+    SkillGroup:
+      type: object
+      properties:
+        category:
+          type: string
+        skills:
+          type: array
+          items:
+            $ref: "#/components/schemas/Skill"
+      required:
+        - category
+        - skills
+    Skill:
+      type: object
+      properties:
+        name:
+          type: string
+        level:
+          type: integer
+          minimum: 0
+          maximum: 100
+      required:
+        - name
+        - level
+    ExperienceEntry:
+      type: object
+      properties:
+        id:
+          type: integer
+        kind:
+          type: string
+          enum: [education, work]
+        title:
+          type: string
+        organization:
+          type: string
+        location:
+          type: string
+        startDate:
+          type: string
+        endDate:
+          type: string
+          nullable: true
+        description:
+          type: string
+        highlights:
+          type: array
+          items:
+            type: string
+      required:
+        - id
+        - kind
+        - title
+        - organization
+        - location
+        - startDate
+        - description
+        - highlights
+    CurrentlyWorking:
+      type: object
+      properties:
+        headline:
+          type: string
+        summary:
+          type: string
+        focusAreas:
+          type: array
+          items:
+            type: string
+        learning:
+          type: array
+          items:
+            type: string
+        availability:
+          type: string
+        lastUpdated:
+          type: string
+          format: date-time
+      required:
+        - headline
+        - summary
+        - focusAreas
+        - learning
+        - availability
+        - lastUpdated
+    PortfolioStats:
+      type: object
+      properties:
+        yearsCoding:
+          type: integer
+        projectsShipped:
+          type: integer
+        technologiesUsed:
+          type: integer
+        coffeesConsumed:
+          type: integer
+        commitsThisYear:
+          type: integer
+      required:
+        - yearsCoding
+        - projectsShipped
+        - technologiesUsed
+        - coffeesConsumed
+        - commitsThisYear

@@ -6,4 +6,14 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from "./contactMessage";
+export * from "./createContactMessage";
+export * from "./currentlyWorking";
+export * from "./experienceEntry";
+export * from "./experienceEntryKind";
 export * from "./healthStatus";
+export * from "./portfolioStats";
+export * from "./project";
+export * from "./projectStatus";
+export * from "./skill";
+export * from "./skillGroup";

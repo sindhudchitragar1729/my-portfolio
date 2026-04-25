@@ -5,18 +5,30 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
+  MutationFunction,
   QueryFunction,
   QueryKey,
+  UseMutationOptions,
+  UseMutationResult,
   UseQueryOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
 
-import type { HealthStatus } from "./api.schemas";
+import type {
+  ContactMessage,
+  CreateContactMessage,
+  CurrentlyWorking,
+  ExperienceEntry,
+  HealthStatus,
+  PortfolioStats,
+  Project,
+  SkillGroup,
+} from "./api.schemas";
 
 import { customFetch } from "../custom-fetch";
-import type { ErrorType } from "../custom-fetch";
+import type { ErrorType, BodyType } from "../custom-fetch";
 
 type AwaitedInput<T> = PromiseLike<T> | T;
 
@@ -92,6 +104,536 @@ export function useHealthCheck<
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getHealthCheckQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * Visitors can send a message via the portfolio contact form.
+ * @summary Submit a contact message
+ */
+export const getCreateContactMessageUrl = () => {
+  return `/api/contact`;
+};
+
+export const createContactMessage = async (
+  createContactMessage: CreateContactMessage,
+  options?: RequestInit,
+): Promise<ContactMessage> => {
+  return customFetch<ContactMessage>(getCreateContactMessageUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createContactMessage),
+  });
+};
+
+export const getCreateContactMessageMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createContactMessage>>,
+    TError,
+    { data: BodyType<CreateContactMessage> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createContactMessage>>,
+  TError,
+  { data: BodyType<CreateContactMessage> },
+  TContext
+> => {
+  const mutationKey = ["createContactMessage"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createContactMessage>>,
+    { data: BodyType<CreateContactMessage> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createContactMessage(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateContactMessageMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createContactMessage>>
+>;
+export type CreateContactMessageMutationBody = BodyType<CreateContactMessage>;
+export type CreateContactMessageMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Submit a contact message
+ */
+export const useCreateContactMessage = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createContactMessage>>,
+    TError,
+    { data: BodyType<CreateContactMessage> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createContactMessage>>,
+  TError,
+  { data: BodyType<CreateContactMessage> },
+  TContext
+> => {
+  return useMutation(getCreateContactMessageMutationOptions(options));
+};
+
+/**
+ * Returns all contact messages, newest first.
+ * @summary List all contact messages
+ */
+export const getListContactMessagesUrl = () => {
+  return `/api/contact`;
+};
+
+export const listContactMessages = async (
+  options?: RequestInit,
+): Promise<ContactMessage[]> => {
+  return customFetch<ContactMessage[]>(getListContactMessagesUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListContactMessagesQueryKey = () => {
+  return [`/api/contact`] as const;
+};
+
+export const getListContactMessagesQueryOptions = <
+  TData = Awaited<ReturnType<typeof listContactMessages>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listContactMessages>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getListContactMessagesQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof listContactMessages>>
+  > = ({ signal }) => listContactMessages({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listContactMessages>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListContactMessagesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listContactMessages>>
+>;
+export type ListContactMessagesQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List all contact messages
+ */
+
+export function useListContactMessages<
+  TData = Awaited<ReturnType<typeof listContactMessages>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listContactMessages>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListContactMessagesQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary List portfolio projects
+ */
+export const getListProjectsUrl = () => {
+  return `/api/portfolio/projects`;
+};
+
+export const listProjects = async (
+  options?: RequestInit,
+): Promise<Project[]> => {
+  return customFetch<Project[]>(getListProjectsUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListProjectsQueryKey = () => {
+  return [`/api/portfolio/projects`] as const;
+};
+
+export const getListProjectsQueryOptions = <
+  TData = Awaited<ReturnType<typeof listProjects>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listProjects>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getListProjectsQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof listProjects>>> = ({
+    signal,
+  }) => listProjects({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listProjects>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListProjectsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listProjects>>
+>;
+export type ListProjectsQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List portfolio projects
+ */
+
+export function useListProjects<
+  TData = Awaited<ReturnType<typeof listProjects>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listProjects>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListProjectsQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary List skills grouped by category
+ */
+export const getListSkillsUrl = () => {
+  return `/api/portfolio/skills`;
+};
+
+export const listSkills = async (
+  options?: RequestInit,
+): Promise<SkillGroup[]> => {
+  return customFetch<SkillGroup[]>(getListSkillsUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListSkillsQueryKey = () => {
+  return [`/api/portfolio/skills`] as const;
+};
+
+export const getListSkillsQueryOptions = <
+  TData = Awaited<ReturnType<typeof listSkills>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listSkills>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getListSkillsQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof listSkills>>> = ({
+    signal,
+  }) => listSkills({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listSkills>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListSkillsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listSkills>>
+>;
+export type ListSkillsQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List skills grouped by category
+ */
+
+export function useListSkills<
+  TData = Awaited<ReturnType<typeof listSkills>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listSkills>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListSkillsQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary List education and work experience
+ */
+export const getListExperienceUrl = () => {
+  return `/api/portfolio/experience`;
+};
+
+export const listExperience = async (
+  options?: RequestInit,
+): Promise<ExperienceEntry[]> => {
+  return customFetch<ExperienceEntry[]>(getListExperienceUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListExperienceQueryKey = () => {
+  return [`/api/portfolio/experience`] as const;
+};
+
+export const getListExperienceQueryOptions = <
+  TData = Awaited<ReturnType<typeof listExperience>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listExperience>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getListExperienceQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof listExperience>>> = ({
+    signal,
+  }) => listExperience({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listExperience>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListExperienceQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listExperience>>
+>;
+export type ListExperienceQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List education and work experience
+ */
+
+export function useListExperience<
+  TData = Awaited<ReturnType<typeof listExperience>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof listExperience>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListExperienceQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary What I'm currently working on
+ */
+export const getGetCurrentlyWorkingUrl = () => {
+  return `/api/portfolio/now`;
+};
+
+export const getCurrentlyWorking = async (
+  options?: RequestInit,
+): Promise<CurrentlyWorking> => {
+  return customFetch<CurrentlyWorking>(getGetCurrentlyWorkingUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetCurrentlyWorkingQueryKey = () => {
+  return [`/api/portfolio/now`] as const;
+};
+
+export const getGetCurrentlyWorkingQueryOptions = <
+  TData = Awaited<ReturnType<typeof getCurrentlyWorking>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getCurrentlyWorking>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetCurrentlyWorkingQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getCurrentlyWorking>>
+  > = ({ signal }) => getCurrentlyWorking({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getCurrentlyWorking>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetCurrentlyWorkingQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getCurrentlyWorking>>
+>;
+export type GetCurrentlyWorkingQueryError = ErrorType<unknown>;
+
+/**
+ * @summary What I'm currently working on
+ */
+
+export function useGetCurrentlyWorking<
+  TData = Awaited<ReturnType<typeof getCurrentlyWorking>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getCurrentlyWorking>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetCurrentlyWorkingQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Aggregate portfolio stats
+ */
+export const getGetStatsUrl = () => {
+  return `/api/portfolio/stats`;
+};
+
+export const getStats = async (
+  options?: RequestInit,
+): Promise<PortfolioStats> => {
+  return customFetch<PortfolioStats>(getGetStatsUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetStatsQueryKey = () => {
+  return [`/api/portfolio/stats`] as const;
+};
+
+export const getGetStatsQueryOptions = <
+  TData = Awaited<ReturnType<typeof getStats>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<Awaited<ReturnType<typeof getStats>>, TError, TData>;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetStatsQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getStats>>> = ({
+    signal,
+  }) => getStats({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getStats>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetStatsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getStats>>
+>;
+export type GetStatsQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Aggregate portfolio stats
+ */
+
+export function useGetStats<
+  TData = Awaited<ReturnType<typeof getStats>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<Awaited<ReturnType<typeof getStats>>, TError, TData>;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetStatsQueryOptions(options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;
