@@ -10,11 +10,13 @@ import { Projects } from "@/components/sections/Projects";
 import { Skills } from "@/components/sections/Skills";
 import { Experience } from "@/components/sections/Experience";
 import { CurrentlyWorking } from "@/components/sections/CurrentlyWorking";
+import { Photos } from "@/components/sections/Photos";
+import { Blogs } from "@/components/sections/Blogs";
 import { Contact } from "@/components/sections/Contact";
 
 export default function Home() {
   useEffect(() => {
-    document.title = "Alex Carter · Software Engineer & Builder";
+    document.title = "Sindhu D Chitragar · Software Engineer & Builder";
   }, []);
 
   return (
@@ -34,6 +36,8 @@ export default function Home() {
         <Skills />
         <Experience />
         <CurrentlyWorking />
+        <Photos />
+        <Blogs />
         <Contact />
         <Footer />
       </main>

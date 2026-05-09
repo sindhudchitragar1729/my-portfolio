@@ -197,14 +197,14 @@ export function Projects() {
       />
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {isLoading || !data
+        {isLoading || !data || !Array.isArray(data)
           ? Array.from({ length: 6 }).map((_, i) => (
               <div
                 key={i}
                 className="h-72 rounded-xl border border-card-border bg-card/40 animate-pulse"
               />
             ))
-          : (data as Project[]).map((p, i) => (
+          : data.map((p, i) => (
               <ProjectCard key={p.id} project={p} index={i} />
             ))}
       </div>

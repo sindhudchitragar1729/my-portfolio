@@ -7,11 +7,10 @@ import { useCreateContactMessage } from "@workspace/api-client-react";
 import { SectionHeader } from "@/components/SectionHeader";
 
 const SOCIAL_LINKS = {
-  // TODO: swap with real URLs
-  linkedin: "https://linkedin.com/in/yourhandle",
-  instagram: "https://instagram.com/yourhandle",
-  github: "https://github.com/yourhandle",
-  email: "hello@example.com",
+  linkedin: "https://linkedin.com/in/sindhu-d-c",
+  instagram: "https://instagram.com/sindhu.d.c7",
+  github: "https://github.com/sindhudchitragar1729",
+  email: "sindhu.d.chitragar1729@gmail.com",
 };
 
 export function Contact() {
@@ -154,19 +153,19 @@ export function Contact() {
                 href={SOCIAL_LINKS.linkedin}
                 icon={<FiLinkedin size={16} />}
                 label="linkedin"
-                handle="/in/yourhandle"
+                handle="Sindhu D C"
               />
               <SocialRow
                 href={SOCIAL_LINKS.instagram}
                 icon={<FiInstagram size={16} />}
                 label="instagram"
-                handle="@yourhandle"
+                handle="@sindhu.d.c7"
               />
               <SocialRow
                 href={SOCIAL_LINKS.github}
                 icon={<FiGithub size={16} />}
                 label="github"
-                handle="@yourhandle"
+                handle="@sindhudchitragar1729"
               />
             </div>
           </div>

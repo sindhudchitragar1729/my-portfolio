@@ -15,7 +15,7 @@ const codeLines: { tokens: { t: string; c: string }[] }[] = [
     tokens: [
       { t: "  name", c: "text-sky-300" },
       { t: ": ", c: "text-foreground/70" },
-      { t: "'Alex Carter'", c: "text-emerald-300" },
+      { t: "'Sindhu D Chitragar'", c: "text-emerald-300" },
       { t: ",", c: "text-foreground/70" },
     ],
   },
@@ -146,35 +146,25 @@ export function About() {
           className="space-y-5 text-muted-foreground text-base md:text-lg leading-relaxed"
         >
           <p>
-            I'm a software engineer who has been writing code since I was thirteen
-            and accidentally turned it into a career. I care about{" "}
-            <span className="text-foreground">how interfaces feel</span> — the
-            specific weight of a button press, the rhythm of a load state, the
-            millisecond between intent and response.
+            I’m a 3rd-year Electronics and Communication Engineering student at GM Institute of Technology, driven by an intense curiosity for technology and an obsession with building things through code. What started as simple curiosity quickly turned into countless hours of learning, experimenting, debugging, and pushing myself deeper into the world of software development and AI.
           </p>
           <p>
-            Most days I'm building tools for other builders: design systems,
-            real-time editors, developer infrastructure. I have an unreasonable
-            relationship with{" "}
-            <span className="text-foreground">monospaced fonts</span>, an even
-            more unreasonable one with{" "}
-            <span className="text-foreground">animation curves</span>, and I will
-            die on the hill that{" "}
-            <span className="text-foreground">empty states matter</span>.
+            I’m deeply passionate about{" "}
+            <span className="text-foreground">Artificial Intelligence</span>,{" "}
+            <span className="text-foreground">Machine Learning</span>,{" "}
+            <span className="text-foreground">Full-Stack Development</span>, and problem-solving. For me, coding is not just a skill — it’s a mindset. I genuinely enjoy breaking down complex problems, understanding how systems work internally, and creating solutions that feel meaningful and impactful.
           </p>
           <p>
-            When I'm not at the keyboard, I'm probably reading something far too
-            long-form, taking apart a piece of analog gear, or trying (badly) to
-            learn Italian.
+            My goal is to become a developer and AI engineer capable of creating intelligent systems that solve real-world problems and leave a lasting impact. Every project I build, every bug I fix, and every concept I learn is one more step toward that vision.
           </p>
           <div className="pt-4 grid grid-cols-2 sm:grid-cols-3 gap-y-2 gap-x-6 font-mono text-sm">
             {[
-              "TypeScript",
-              "Rust",
-              "Go",
-              "WebGPU",
-              "Postgres",
-              "Distributed systems",
+              "JavaScript / TypeScript",
+              "React",
+              "Node.js & Express",
+              "Machine Learning",
+              "PostgreSQL / MySQL",
+              "Python & C++",
             ].map((s) => (
               <div key={s} className="flex items-center gap-2 text-muted-foreground">
                 <span className="text-primary">▹</span>

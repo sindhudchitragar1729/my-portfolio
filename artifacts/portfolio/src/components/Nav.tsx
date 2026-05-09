@@ -53,7 +53,7 @@ export function Nav() {
             href="#top"
             className="font-mono text-sm font-bold tracking-wider text-foreground"
           >
-            <span className="text-primary">~/</span>alex<span className="text-primary">.dev</span>
+            <span className="text-primary">~/</span>sindhu<span className="text-primary">.dev</span>
           </a>
           <ul className="hidden md:flex items-center gap-1 font-mono text-xs">
             {SECTIONS.map((s, i) => (

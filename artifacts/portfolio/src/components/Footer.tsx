@@ -12,7 +12,7 @@ export function Footer() {
           {/* TODO: swap with real URLs */}
           <motion.a
             whileHover={{ y: -2, color: "hsl(var(--primary))" }}
-            href="https://github.com/yourhandle"
+            href="https://github.com/sindhudchitragar1729"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="GitHub"
@@ -21,7 +21,7 @@ export function Footer() {
           </motion.a>
           <motion.a
             whileHover={{ y: -2, color: "hsl(var(--primary))" }}
-            href="https://linkedin.com/in/yourhandle"
+            href="https://linkedin.com/in/sindhu-d-c"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="LinkedIn"
@@ -30,7 +30,7 @@ export function Footer() {
           </motion.a>
           <motion.a
             whileHover={{ y: -2, color: "hsl(var(--primary))" }}
-            href="https://instagram.com/yourhandle"
+            href="https://instagram.com/sindhu.d.c7"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Instagram"
