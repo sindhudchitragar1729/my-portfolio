@@ -6,7 +6,7 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import { useGetStats } from "@workspace/api-client-react";
+import { stats as data } from "@/lib/data";
 
 function Counter({ value, suffix = "" }: { value: number; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -43,7 +43,7 @@ const items = (data: {
 ];
 
 export function Stats() {
-  const { data, isLoading } = useGetStats();
+  const isLoading = false;
 
   return (
     <section className="w-full py-20">

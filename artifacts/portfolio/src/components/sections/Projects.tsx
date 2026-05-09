@@ -7,7 +7,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { ArrowUpRight, Github, ExternalLink } from "lucide-react";
-import { useListProjects } from "@workspace/api-client-react";
+import { projects as data } from "@/lib/data";
 import { SectionHeader } from "@/components/SectionHeader";
 
 type Project = {
@@ -186,7 +186,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 }
 
 export function Projects() {
-  const { data, isLoading } = useListProjects();
+  const isLoading = false;
 
   return (
     <section id="projects" className="w-full py-24 scroll-mt-20">

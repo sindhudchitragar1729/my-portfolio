@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Sparkles, BookOpen, Radio } from "lucide-react";
-import { useGetCurrentlyWorking } from "@workspace/api-client-react";
+import { currentlyWorking as data } from "@/lib/data";
 import { SectionHeader } from "@/components/SectionHeader";
 
 function formatRelative(iso: string) {
@@ -13,7 +13,7 @@ function formatRelative(iso: string) {
 }
 
 export function CurrentlyWorking() {
-  const { data, isLoading } = useGetCurrentlyWorking();
+  const isLoading = false;
 
   return (
     <section id="now" className="w-full py-24 scroll-mt-20">

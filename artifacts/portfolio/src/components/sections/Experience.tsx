@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { GraduationCap, Briefcase } from "lucide-react";
-import { useListExperience } from "@workspace/api-client-react";
+import { experience as data } from "@/lib/data";
 import { SectionHeader } from "@/components/SectionHeader";
 
 type Entry = {
@@ -38,7 +38,7 @@ function formatDate(d: string) {
 }
 
 export function Experience() {
-  const { data, isLoading } = useListExperience();
+  const isLoading = false;
   const [filter, setFilter] = useState<"all" | "work" | "education">("all");
 
   const filtered = (data as Entry[] | undefined)?.filter(

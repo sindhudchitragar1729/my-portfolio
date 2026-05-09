@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useListSkills } from "@workspace/api-client-react";
+import { skillGroups as data } from "@/lib/data";
 import { SectionHeader } from "@/components/SectionHeader";
 
 type SkillGroup = {
@@ -52,7 +52,7 @@ function SkillBar({
 }
 
 export function Skills() {
-  const { data, isLoading } = useListSkills();
+  const isLoading = false;
 
   return (
     <section id="skills" className="w-full py-24 scroll-mt-20">
